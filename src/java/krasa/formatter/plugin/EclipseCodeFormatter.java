@@ -3,6 +3,7 @@ package krasa.formatter.plugin;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.intellij.psi.PsiWhiteSpace;
 import krasa.formatter.eclipse.Classloaders;
 import krasa.formatter.eclipse.CodeFormatterFacade;
 import krasa.formatter.exception.FileDoesNotExistsException;
@@ -19,7 +20,9 @@ import com.intellij.openapi.editor.*;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilBase;
 
 /**
@@ -111,7 +114,23 @@ public class EclipseCodeFormatter {
 
 	private String reformat(int startOffset, int endOffset, String text, PsiFile psiFile)
 			throws FileDoesNotExistsException {
-		return codeFormatterFacade.format(text, getLineStartOffset(startOffset, text), endOffset, psiFile);
+		int start = getLineStartOffset(startOffset, text);
+		int end = endOffset;
+		PsiElement startElement = psiFile.findElementAt(startOffset);
+		PsiElement endElement   = psiFile.findElementAt(endOffset);
+		if (startElement != null && endElement != null) {
+			if (startElement instanceof PsiWhiteSpace)
+				startElement = startElement.getNextSibling();
+
+			if (endElement instanceof PsiWhiteSpace)
+				endElement = endElement.getPrevSibling();
+			PsiElement parent = PsiTreeUtil.findCommonContext(startElement, endElement);
+			if (parent != null) {
+				start = parent.getTextRange().getStartOffset();
+				end = parent.getTextRange().getEndOffset();
+			}
+		}
+		return codeFormatterFacade.format(text, start, end, psiFile);
 	}
 
 	/**
