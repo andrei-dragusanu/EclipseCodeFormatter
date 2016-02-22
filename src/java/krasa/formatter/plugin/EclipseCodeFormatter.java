@@ -124,10 +124,12 @@ public class EclipseCodeFormatter {
 
 			if (endElement instanceof PsiWhiteSpace)
 				endElement = endElement.getPrevSibling();
-			PsiElement parent = PsiTreeUtil.findCommonContext(startElement, endElement);
-			if (parent != null) {
-				start = parent.getTextRange().getStartOffset();
-				end = parent.getTextRange().getEndOffset();
+			if(startElement != null && endElement != null) {
+				PsiElement parent = PsiTreeUtil.findCommonContext(startElement, endElement);
+				if (parent != null) {
+					start = parent.getTextRange().getStartOffset();
+					end = parent.getTextRange().getEndOffset();
+				}
 			}
 		}
 		return codeFormatterFacade.format(text, start, end, psiFile);
