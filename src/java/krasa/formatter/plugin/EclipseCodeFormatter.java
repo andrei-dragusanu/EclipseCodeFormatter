@@ -114,16 +114,16 @@ public class EclipseCodeFormatter {
 
 	private String reformat(int startOffset, int endOffset, String text, PsiFile psiFile)
 			throws FileDoesNotExistsException {
-		int start = getLineStartOffset(startOffset, text);
+		int start = startOffset;
 		int end = endOffset;
 		PsiElement startElement = psiFile.findElementAt(startOffset);
 		PsiElement endElement   = psiFile.findElementAt(endOffset);
 		if (startElement != null && endElement != null) {
 			if (startElement instanceof PsiWhiteSpace)
 				startElement = startElement.getNextSibling();
-
 			if (endElement instanceof PsiWhiteSpace)
 				endElement = endElement.getPrevSibling();
+
 			if(startElement != null && endElement != null) {
 				PsiElement parent = PsiTreeUtil.findCommonContext(startElement, endElement);
 				if (parent != null) {
@@ -132,7 +132,7 @@ public class EclipseCodeFormatter {
 				}
 			}
 		}
-		return codeFormatterFacade.format(text, start, end, psiFile);
+		return codeFormatterFacade.format(text, getLineStartOffset(start, text), end, psiFile);
 	}
 
 	/**
