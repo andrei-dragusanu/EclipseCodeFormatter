@@ -19,9 +19,7 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilBase;
 
@@ -119,8 +117,10 @@ public class EclipseCodeFormatter {
 		PsiElement startElement = psiFile.findElementAt(startOffset);
 		PsiElement endElement   = psiFile.findElementAt(endOffset);
 		if (startElement != null && endElement != null) {
-			if (startElement instanceof PsiWhiteSpace)
+			if (startElement instanceof PsiWhiteSpace) {
 				startElement = startElement.getNextSibling();
+				startElement = psiFile.findElementAt(startElement.getTextOffset());
+			}
 			if (endElement instanceof PsiWhiteSpace)
 				endElement = endElement.getPrevSibling();
 
@@ -128,7 +128,9 @@ public class EclipseCodeFormatter {
 				PsiElement parent = PsiTreeUtil.findCommonContext(startElement, endElement);
 				if (parent != null) {
 					start = parent.getTextRange().getStartOffset();
-					end = parent.getTextRange().getEndOffset();
+					if (!(parent instanceof PsiClass || parent instanceof PsiMethod)) {
+						end = parent.getTextRange().getEndOffset();
+					}
 				}
 			}
 		}
