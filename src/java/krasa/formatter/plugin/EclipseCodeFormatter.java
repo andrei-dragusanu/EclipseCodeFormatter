@@ -1,5 +1,7 @@
 package krasa.formatter.plugin;
 
+import static com.intellij.psi.util.PsiTreeUtil.getTopmostParentOfType;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,6 +119,7 @@ public class EclipseCodeFormatter {
 		PsiElement startElement = psiFile.findElementAt(startOffset);
 		PsiElement endElement   = psiFile.findElementAt(endOffset);
 		if (startElement != null && endElement != null) {
+			// 'squeeze' the selection to first non-white space elements
 			if (startElement instanceof PsiWhiteSpace) {
 				startElement = startElement.getNextSibling();
 				startElement = psiFile.findElementAt(startElement.getTextOffset());
@@ -125,7 +128,14 @@ public class EclipseCodeFormatter {
 				endElement = endElement.getPrevSibling();
 
 			if(startElement != null && endElement != null) {
+				// find the common element that includes both start and end elements
 				PsiElement parent = PsiTreeUtil.findCommonContext(startElement, endElement);
+				// if the common context (parent) is part of a chained method call, find the whole
+				// method chain
+				if (parent != null && parent instanceof PsiMethodCallExpression) {
+					parent = getTopmostParentOfType(parent, PsiMethodCallExpression.class);
+				}
+
 				if (parent != null) {
 					start = parent.getTextRange().getStartOffset();
 					if (!(parent instanceof PsiClass || parent instanceof PsiMethod)) {
