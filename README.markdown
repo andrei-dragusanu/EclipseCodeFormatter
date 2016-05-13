@@ -4,7 +4,7 @@ Currently supports formatting of
  - Java (also emulates Eclipse's imports optimizing)
  - JavaScript 
  - GWT
-
+ - C/C++
 
 
 # Instructions #
@@ -24,7 +24,8 @@ Currently supports formatting of
   	  - Click OK to save the settings.
   	  - Go to the .settings directory inside your project's directory. There you will find the org.eclipse.jdt.core.prefs file which contains the Eclipse formatter settings.
   	  - The result should look like [this](https://github.com/krasa/EclipseCodeFormatter/blob/master/test/resources/org.eclipse.jdt.core.prefs) 
-  - Set path to the file (IntelliJ | Settings | Other Settings | Eclipse Code Formatter | field "Eclipse preference file"), 
+  - Open a project in IntelliJ
+  - Set path to the config file (IntelliJ | Settings | Other Settings | Eclipse Code Formatter | field "Eclipse preference file")
   - When using exported profiles(xml file), select desired profile in the combobox "Java formatter profile"
   - Check "Optimizing Imports" configuration
   	- Set import order
@@ -62,11 +63,8 @@ Currently supports formatting of
 
 
 # Troubleshooting #
-If it is mysteriously not working, edit IntelliJ IDEA XX\bin\log.xml:
-add following lines before < root >:
+If it is mysteriously not working, go to `Main Menu | Help | Edit Debug Settings` and add:
 ```
-	<category name="krasa.formatter">
-		<level value="DEBUG"/>
-	</category>
+krasa.formatter
 ````
-and restart. Try to reformat something and send me the log...
+Try to reformat something and send me the log...

@@ -9,7 +9,10 @@
 package krasa.formatter.settings;
 
 import com.intellij.util.xmlb.annotations.Transient;
-import krasa.formatter.settings.provider.*;
+import krasa.formatter.settings.provider.CppPropertiesProvider;
+import krasa.formatter.settings.provider.ImportOrderProvider;
+import krasa.formatter.settings.provider.JSPropertiesProvider;
+import krasa.formatter.settings.provider.JavaPropertiesProvider;
 import krasa.formatter.utils.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -59,9 +62,52 @@ public class Settings {
 	private String selectedJavaScriptProfile;
 	private String selectedCppProfile;
 	private boolean useForLiveTemplates = false;
+	@Deprecated
 	private boolean useOldEclipseJavaFormatter = false;
+	private FormatterVersion eclipseVersion = FormatterVersion.NEWEST;
+	private ImportOrdering importOrdering = ImportOrdering.ECLIPSE_452;
+	private String pathToEclipse = "";
 
+	/**
+	 * NEVER FORGET: add fields to #equalsContent !!
+	 */
 	public Settings() {
+	}
+
+	public String getPathToEclipse() {
+		return pathToEclipse;
+	}
+
+	public FormatterVersion getEclipseVersion() {
+		return eclipseVersion;
+	}
+
+	public void setEclipseVersion(FormatterVersion eclipseVersion) {
+		this.eclipseVersion = eclipseVersion;
+		switch (eclipseVersion) {
+
+			case ECLIPSE_44:
+				useOldEclipseJavaFormatter = true;
+				break;
+			case NEWEST:
+				useOldEclipseJavaFormatter = false;
+				break;
+			case CUSTOM:
+				useOldEclipseJavaFormatter = false;
+				break;
+		}
+	}
+
+	public ImportOrdering getImportOrdering() {
+		return importOrdering;
+	}
+
+	public void setImportOrdering(ImportOrdering importOrdering) {
+		this.importOrdering = importOrdering;
+	}
+
+	public void setPathToEclipse(String pathToEclipse) {
+		this.pathToEclipse = pathToEclipse;
 	}
 
 	public Settings(Long id, String name) {
@@ -225,12 +271,28 @@ public class Settings {
 		this.useForLiveTemplates = useForLiveTemplates;
 	}
 
+	@Deprecated
 	public boolean isUseOldEclipseJavaFormatter() {
 		return useOldEclipseJavaFormatter;
 	}
 
+	@Deprecated
 	public void setUseOldEclipseJavaFormatter(final boolean useOldEclipseJavaFormatter) {
 		this.useOldEclipseJavaFormatter = useOldEclipseJavaFormatter;
+		if (useOldEclipseJavaFormatter) {
+			eclipseVersion = FormatterVersion.ECLIPSE_44;
+		}
+	}
+
+	public static enum FormatterVersion {
+		ECLIPSE_44,
+		NEWEST,
+		CUSTOM
+	}
+
+	public static enum ImportOrdering {
+		ECLIPSE_451,
+		ECLIPSE_452,
 	}
 
 	public static enum Formatter {
@@ -350,6 +412,8 @@ public class Settings {
 			return false;
 		if (useForLiveTemplates != settings.useForLiveTemplates)
 			return false;
+		if (useOldEclipseJavaFormatter != settings.useOldEclipseJavaFormatter)
+			return false;
 		if (pathToConfigFileJS != null ? !pathToConfigFileJS.equals(settings.pathToConfigFileJS)
 				: settings.pathToConfigFileJS != null)
 			return false;
@@ -377,8 +441,14 @@ public class Settings {
 		if (selectedJavaScriptProfile != null ? !selectedJavaScriptProfile.equals(settings.selectedJavaScriptProfile)
 				: settings.selectedJavaScriptProfile != null)
 			return false;
-		return !(selectedCppProfile != null ? !selectedCppProfile.equals(settings.selectedCppProfile)
-				: settings.selectedCppProfile != null);
+		if (selectedCppProfile != null ? !selectedCppProfile.equals(settings.selectedCppProfile)
+				: settings.selectedCppProfile != null)
+			return false;
+		if (eclipseVersion != settings.eclipseVersion)
+			return false;
+		if (importOrdering != settings.importOrdering)
+			return false;
+		return pathToEclipse != null ? pathToEclipse.equals(settings.pathToEclipse) : settings.pathToEclipse == null;
 
 	}
 
@@ -396,12 +466,15 @@ public class Settings {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 
 		Settings settings = (Settings) o;
 
-		if (id != null ? !id.equals(settings.id) : settings.id != null) return false;
+		if (id != null ? !id.equals(settings.id) : settings.id != null)
+			return false;
 
 		return true;
 	}
