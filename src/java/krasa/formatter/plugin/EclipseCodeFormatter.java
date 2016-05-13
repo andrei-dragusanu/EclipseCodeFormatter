@@ -1,6 +1,8 @@
 package krasa.formatter.plugin;
 
 import static com.intellij.psi.util.PsiTreeUtil.getTopmostParentOfType;
+import static krasa.formatter.utils.FileUtils.isJava;
+import static krasa.formatter.utils.FileUtils.isWholeFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +16,7 @@ import krasa.formatter.settings.Settings;
 import krasa.formatter.utils.FileUtils;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.impl.TemplateState;
@@ -48,10 +51,9 @@ public class EclipseCodeFormatter {
 
 	public void format(PsiFile psiFile, int startOffset, int endOffset) throws FileDoesNotExistsException {
 		LOG.debug("#format " + startOffset + "-" + endOffset);
-		boolean wholeFile = FileUtils.isWholeFile(startOffset, endOffset, psiFile.getText());
-		Range range = new Range(startOffset, endOffset, wholeFile);
 
 		final Editor editor = PsiUtilBase.findEditor(psiFile);
+        final Range range = findRange(startOffset, endOffset, psiFile, editor);
 		if (editor != null) {
 			TemplateState templateState = TemplateManagerImpl.getTemplateState(editor);
 			if (templateState != null && !settings.isUseForLiveTemplates()) {
@@ -63,6 +65,52 @@ public class EclipseCodeFormatter {
 		}
 
 	}
+
+    private static Range findRange(final int startOffset, final int endOffset,
+            @NotNull final PsiFile psiFile, @Nullable Editor editor) {
+        final boolean isWholeFile = isWholeFile(startOffset, endOffset, psiFile.getText());
+        // only Java for now
+		// TODO: so maybe move this to JavaCodeFormatterFacade or some other specialised
+		// implementation?
+		// skip for selections
+        if (isWholeFile || !isJava(psiFile) || editor == null
+                || !editor.getSelectionModel().hasSelection()) {
+            return new Range(startOffset, endOffset, isWholeFile);
+        }
+
+        int start = startOffset;
+        int end = endOffset;
+        PsiElement startElement = psiFile.findElementAt(startOffset);
+        PsiElement endElement = psiFile.findElementAt(endOffset);
+        if (startElement != null && endElement != null) {
+            // 'squeeze' the selection to first non-white space elements
+            if (startElement instanceof PsiWhiteSpace) {
+                startElement = startElement.getNextSibling();
+                startElement = psiFile.findElementAt(startElement.getTextOffset());
+            }
+            if (endElement instanceof PsiWhiteSpace) {
+                endElement = endElement.getPrevSibling();
+            }
+
+            if (startElement != null && endElement != null) {
+                // find the common element that includes both start and end elements
+                PsiElement parent = PsiTreeUtil.findCommonContext(startElement, endElement);
+                // if the common context (parent) is part of a chained method call, find the whole
+                // method chain
+                if (parent != null && parent instanceof PsiMethodCallExpression) {
+                    parent = getTopmostParentOfType(parent, PsiMethodCallExpression.class);
+                }
+
+                if (parent != null) {
+                    start = parent.getTextRange().getStartOffset();
+                    if (!(parent instanceof PsiClass || parent instanceof PsiMethod)) {
+                        end = parent.getTextRange().getEndOffset();
+                    }
+                }
+            }
+        }
+        return new Range(start, end, false);
+    }
 
 	private void formatWhenEditorIsClosed(Range range, PsiFile psiFile) throws FileDoesNotExistsException {
 		LOG.debug("#formatWhenEditorIsClosed " + psiFile.getName());
@@ -114,37 +162,8 @@ public class EclipseCodeFormatter {
 
 	private String reformat(int startOffset, int endOffset, String text, PsiFile psiFile)
 			throws FileDoesNotExistsException {
-		int start = startOffset;
-		int end = endOffset;
-		PsiElement startElement = psiFile.findElementAt(startOffset);
-		PsiElement endElement   = psiFile.findElementAt(endOffset);
-		if (startElement != null && endElement != null) {
-			// 'squeeze' the selection to first non-white space elements
-			if (startElement instanceof PsiWhiteSpace) {
-				startElement = startElement.getNextSibling();
-				startElement = psiFile.findElementAt(startElement.getTextOffset());
-			}
-			if (endElement instanceof PsiWhiteSpace)
-				endElement = endElement.getPrevSibling();
-
-			if(startElement != null && endElement != null) {
-				// find the common element that includes both start and end elements
-				PsiElement parent = PsiTreeUtil.findCommonContext(startElement, endElement);
-				// if the common context (parent) is part of a chained method call, find the whole
-				// method chain
-				if (parent != null && parent instanceof PsiMethodCallExpression) {
-					parent = getTopmostParentOfType(parent, PsiMethodCallExpression.class);
-				}
-
-				if (parent != null) {
-					start = parent.getTextRange().getStartOffset();
-					if (!(parent instanceof PsiClass || parent instanceof PsiMethod)) {
-						end = parent.getTextRange().getEndOffset();
-					}
-				}
-			}
-		}
-		return codeFormatterFacade.format(text, getLineStartOffset(start, text), end, psiFile);
+        return codeFormatterFacade.format(text, getLineStartOffset(startOffset, text), endOffset,
+                psiFile);
 	}
 
 	/**
