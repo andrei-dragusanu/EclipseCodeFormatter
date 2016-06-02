@@ -1,19 +1,14 @@
 package krasa.formatter.plugin;
 
-import static com.intellij.psi.util.PsiTreeUtil.getTopmostParentOfType;
+import static com.intellij.psi.util.PsiTreeUtil.getContextOfType;
+import static com.intellij.psi.util.PsiTreeUtil.instanceOf;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 import static krasa.formatter.utils.FileUtils.isJava;
 import static krasa.formatter.utils.FileUtils.isWholeFile;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.intellij.psi.PsiWhiteSpace;
-import krasa.formatter.eclipse.Classloaders;
-import krasa.formatter.eclipse.CodeFormatterFacade;
-import krasa.formatter.exception.FileDoesNotExistsException;
-import krasa.formatter.processor.Processor;
-import krasa.formatter.settings.Settings;
-import krasa.formatter.utils.FileUtils;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,8 +20,13 @@ import com.intellij.openapi.editor.*;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtilBase;
+
+import krasa.formatter.eclipse.Classloaders;
+import krasa.formatter.eclipse.CodeFormatterFacade;
+import krasa.formatter.exception.FileDoesNotExistsException;
+import krasa.formatter.processor.Processor;
+import krasa.formatter.settings.Settings;
 
 /**
  * @author Vojtech Krasa
@@ -69,47 +69,55 @@ public class EclipseCodeFormatter {
     private static Range findRange(final int startOffset, final int endOffset,
             @NotNull final PsiFile psiFile, @Nullable Editor editor) {
         final boolean isWholeFile = isWholeFile(startOffset, endOffset, psiFile.getText());
-        // only Java for now
-		// TODO: so maybe move this to JavaCodeFormatterFacade or some other specialised
-		// implementation?
-		// skip for selections
+        // only Java for now (TODO: so maybe move this to JavaCodeFormatterFacade or some other
+		// specialised implementation?)
+        // skip for selections
         if (isWholeFile || !isJava(psiFile) || editor == null
-                || !editor.getSelectionModel().hasSelection()) {
+                || editor.getSelectionModel().hasSelection()) {
             return new Range(startOffset, endOffset, isWholeFile);
         }
 
         int start = startOffset;
         int end = endOffset;
-        PsiElement startElement = psiFile.findElementAt(startOffset);
-        PsiElement endElement = psiFile.findElementAt(endOffset);
-        if (startElement != null && endElement != null) {
-            // 'squeeze' the selection to first non-white space elements
-            if (startElement instanceof PsiWhiteSpace) {
-                startElement = startElement.getNextSibling();
-                startElement = psiFile.findElementAt(startElement.getTextOffset());
-            }
-            if (endElement instanceof PsiWhiteSpace) {
-                endElement = endElement.getPrevSibling();
-            }
-
-            if (startElement != null && endElement != null) {
-                // find the common element that includes both start and end elements
-                PsiElement parent = PsiTreeUtil.findCommonContext(startElement, endElement);
-                // if the common context (parent) is part of a chained method call, find the whole
-                // method chain
-                if (parent != null && parent instanceof PsiMethodCallExpression) {
-                    parent = getTopmostParentOfType(parent, PsiMethodCallExpression.class);
-                }
-
-                if (parent != null) {
-                    start = parent.getTextRange().getStartOffset();
-                    if (!(parent instanceof PsiClass || parent instanceof PsiMethod)) {
-                        end = parent.getTextRange().getEndOffset();
-                    }
-                }
-            }
+        final PsiElement startElement = getTopmostExpression(psiFile.findElementAt(startOffset));
+        final PsiElement endElement = getTopmostExpression(psiFile.findElementAt(endOffset));
+        if (startElement != null) {
+            start = min(startOffset, startElement.getTextRange().getStartOffset());
+        }
+        if (endElement != null) {
+            end = max(endOffset, endElement.getTextRange().getEndOffset());
         }
         return new Range(start, end, false);
+    }
+
+    @Nullable
+    private static PsiElement getTopmostExpression(final PsiElement element) {
+        PsiElement answer = getParentExpression(element);
+
+        while (true) {
+            PsiElement next = getParentExpression(answer);
+            if (next == null) {
+                return answer;
+            }
+            answer = next;
+        }
+    }
+
+	@Nullable
+    private static PsiElement getParentExpression(@Nullable PsiElement element) {
+        if (element == null || element instanceof PsiFile) {
+            return null;
+        }
+        element = element.getParent();
+
+        while (element != null
+                && !instanceOf(element, PsiExpression.class, PsiParameterList.class)) {
+            if (element instanceof PsiFile) {
+                return null;
+            }
+            element = element.getParent();
+        }
+        return element;
     }
 
 	private void formatWhenEditorIsClosed(Range range, PsiFile psiFile) throws FileDoesNotExistsException {
@@ -209,7 +217,7 @@ public class EclipseCodeFormatter {
 		if (editor != null) {
 			Document document1 = editor.getDocument();
 			int caretOffset = editor.getCaretModel().getOffset();
-			caretOffset = Math.max(Math.min(caretOffset, document1.getTextLength() - 1), 0);
+			caretOffset = max(min(caretOffset, document1.getTextLength() - 1), 0);
 			CharSequence text1 = document1.getCharsSequence();
 			int caretLine = document1.getLineNumber(caretOffset);
 			int lineStartOffset = document1.getLineStartOffset(caretLine);
