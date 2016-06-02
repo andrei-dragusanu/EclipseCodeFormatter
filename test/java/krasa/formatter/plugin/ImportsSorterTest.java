@@ -1,10 +1,12 @@
 package krasa.formatter.plugin;
 
-import java.util.*;
-
 import krasa.formatter.utils.StringUtils;
+import org.junit.Assert;
+import org.junit.Test;
 
-import org.junit.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Vojtech Krasa
@@ -30,7 +32,7 @@ public class ImportsSorterTest {
 
 		List<String> importsOrder = Arrays.asList("java", "javax", "org", "com");
 
-		List<String> strings = ImportsSorter.sort(imports, importsOrder);
+		List<String> strings = ImportsSorter451.sort(imports, importsOrder);
 		printAndAssert(expected, strings);
 	}
 
@@ -52,7 +54,7 @@ public class ImportsSorterTest {
 
 		List<String> importsOrder = Arrays.asList("java", "javax", "org", "com");
 
-		List<String> strings = ImportsSorter.sort(StringUtils.trimImports(imports), importsOrder);
+		List<String> strings = ImportsSorter451.sort(StringUtils.trimImports(imports), importsOrder);
 		printAndAssert(expected, strings);
 	}
 
@@ -76,7 +78,7 @@ public class ImportsSorterTest {
 
 		List<String> imports1 = StringUtils.trimImports(imports);
 		System.err.println(Arrays.toString(imports1.toArray()));
-		List<String> strings = ImportsSorter.sort(imports1, DEFAULT_ORDER);
+		List<String> strings = ImportsSorter451.sort(imports1, DEFAULT_ORDER);
 		printAndAssert(expected, strings);
 	}
 
@@ -90,7 +92,7 @@ public class ImportsSorterTest {
 
 		List<String> imports1 = StringUtils.trimImports(imports);
 		System.err.println(Arrays.toString(imports1.toArray()));
-		List<String> strings = ImportsSorter.sort(imports1, DEFAULT_ORDER);
+		List<String> strings = ImportsSorter451.sort(imports1, DEFAULT_ORDER);
 		printAndAssert(expected, strings);
 	}
 
@@ -111,7 +113,7 @@ public class ImportsSorterTest {
 
 		List<String> imports1 = StringUtils.trimImports(imports);
 		System.err.println(Arrays.toString(imports1.toArray()));
-		List<String> strings = ImportsSorter.sort(imports1, importsOrder);
+		List<String> strings = ImportsSorter451.sort(imports1, importsOrder);
 		printAndAssert(expected, strings);
 	}
 
@@ -150,7 +152,7 @@ public class ImportsSorterTest {
 
 		List<String> imports1 = StringUtils.trimImports(imports);
 		System.err.println(Arrays.toString(imports1.toArray()));
-		List<String> strings = ImportsSorter.sort(imports1, DEFAULT_ORDER);
+		List<String> strings = ImportsSorter451.sort(imports1, DEFAULT_ORDER);
 		printAndAssert(expected, strings);
 	}
 
@@ -164,7 +166,7 @@ public class ImportsSorterTest {
 
 		List<String> imports1 = StringUtils.trimImports(imports);
 		System.err.println(Arrays.toString(imports1.toArray()));
-		List<String> strings = ImportsSorter.sort(imports1, importsOrder);
+		List<String> strings = ImportsSorter451.sort(imports1, importsOrder);
 		printAndAssert(expected, strings);
 	}
 
@@ -178,7 +180,7 @@ public class ImportsSorterTest {
 
 		List<String> imports1 = StringUtils.trimImports(imports);
 		System.err.println(Arrays.toString(imports1.toArray()));
-		List<String> strings = ImportsSorter.sort(imports1, importsOrder);
+		List<String> strings = ImportsSorter451.sort(imports1, importsOrder);
 		printAndAssert(expected, strings);
 	}
 
@@ -192,7 +194,7 @@ public class ImportsSorterTest {
 
 		List<String> imports1 = StringUtils.trimImports(imports);
 		System.err.println(Arrays.toString(imports1.toArray()));
-		List<String> strings = ImportsSorter.sort(imports1, importsOrder);
+		List<String> strings = ImportsSorter451.sort(imports1, importsOrder);
 		printAndAssert(expected, strings);
 	}
 
@@ -209,7 +211,7 @@ public class ImportsSorterTest {
 
 		List<String> imports1 = StringUtils.trimImports(imports);
 		System.err.println(Arrays.toString(imports1.toArray()));
-		List<String> strings = ImportsSorter.sort(imports1, importsOrder);
+		List<String> strings = ImportsSorter451.sort(imports1, importsOrder);
 		printAndAssert(expected, strings);
 	}
 
@@ -225,7 +227,7 @@ public class ImportsSorterTest {
 
 		List<String> imports1 = StringUtils.trimImports(imports);
 		System.err.println(Arrays.toString(imports1.toArray()));
-		List<String> strings = ImportsSorter.sort(imports1, importsOrder);
+		List<String> strings = ImportsSorter451.sort(imports1, importsOrder);
 		printAndAssert(expected, strings);
 	}
 
@@ -237,7 +239,7 @@ public class ImportsSorterTest {
 
 		List<String> imports1 = StringUtils.trimImports(imports);
 		System.err.println(Arrays.toString(imports1.toArray()));
-		List<String> strings = ImportsSorter.sort(imports1, DEFAULT_ORDER);
+		List<String> strings = ImportsSorter451.sort(imports1, DEFAULT_ORDER);
 		printAndAssert(expected, strings);
 	}
 

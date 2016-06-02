@@ -124,8 +124,7 @@ public class EclipseCodeFormatter {
 		String reformat = reformat(range.getStartOffset(), range.getEndOffset(), text, psiFile);
 
 		document.setText(reformat);
-		postProcess(document, psiFile, range);
-		fileDocumentManager.saveDocument(document);
+		postProcess(document, psiFile, range, fileDocumentManager);
 	}
 
 	/* when file is being edited, it is important to load text from editor, i think */
@@ -143,7 +142,7 @@ public class EclipseCodeFormatter {
 		String text = document.getText();
 		String reformat = reformat(range.getStartOffset(), range.getEndOffset(), text, file);
 		document.setText(reformat);
-		postProcess(document, file, range);
+		postProcess(document, file, range, FileDocumentManager.getInstance());
 
 		restoreVisualColumn(editor, visualColumnToRestore, rangeMarker);
 		rangeMarker.dispose();
@@ -151,13 +150,14 @@ public class EclipseCodeFormatter {
 		LOG.debug("#formatWhenEditorIsOpen done");
 	}
 
-	private void postProcess(Document document, PsiFile file, Range range) {
+	private void postProcess(Document document, PsiFile file, Range range, FileDocumentManager fileDocumentManager) {
 		for (Processor postProcessor : postProcessors) {
 			postProcessor.process(document, file, range);
 		}
 		// updates psi, so comments from import statements does not get duplicated
 		final PsiDocumentManager manager = PsiDocumentManager.getInstance(file.getProject());
 		manager.commitDocument(document);
+		fileDocumentManager.saveDocument(document);
 	}
 
 	private String reformat(int startOffset, int endOffset, String text, PsiFile psiFile)
