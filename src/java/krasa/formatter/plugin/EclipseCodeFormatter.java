@@ -111,7 +111,7 @@ public class EclipseCodeFormatter {
         element = element.getParent();
 
         while (element != null
-                && !instanceOf(element, PsiExpression.class, PsiParameterList.class)) {
+                && !instanceOf(element, PsiExpression.class, PsiParameterList.class, PsiAnnotationParameterList.class)) {
             if (element instanceof PsiFile) {
                 return null;
             }
