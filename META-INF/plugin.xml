@@ -2,7 +2,7 @@
 		"http://plugins.intellij.net/plugin.dtd">
 <idea-plugin version="2" url="http://plugins.intellij.net/plugin/?idea&amp;id=6546">
 
-	<name>Eclipse Code Formatter</name>
+	<name>Eclipse Code Formatter (Debug)</name>
 	<id>EclipseCodeFormatter</id>
 	<version>15.5.132.637.2</version>
 
