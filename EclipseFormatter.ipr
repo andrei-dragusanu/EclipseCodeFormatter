@@ -51,8 +51,8 @@
     <option name="formatter" value="ECLIPSE" />
     <option name="id" value="2" />
     <option name="name" value="EclipseFormatter" />
-    <option name="pathToConfigFileJava" value="$PROJECT_DIR$/../../../format.xml" />
-    <option name="selectedJavaProfile" value="Ales" />
+    <option name="pathToConfigFileJava" value="D:/Home/adragusa/trmsys-conventions.xml" />
+    <option name="selectedJavaProfile" value="trms Conventions" />
   </component>
   <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
     <file url="PROJECT" charset="UTF-8" />
@@ -248,6 +248,7 @@
         </codeStyleSettings>
       </value>
     </option>
+    <option name="PREFERRED_PROJECT_CODE_STYLE" value="trms Conventions" />
   </component>
   <component name="ProjectDictionaryState">
     <dictionary name="UNICORN" />
@@ -264,7 +265,7 @@
   <component name="ProjectResources">
     <default-html-doctype>http://www.w3.org/1999/xhtml</default-html-doctype>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" default="true" assert-keyword="true" jdk-15="true" project-jdk-name="IJ 1.6" project-jdk-type="IDEA JDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" default="false" assert-keyword="true" jdk-15="true" project-jdk-name="IntelliJ IDEA Community Edition IC-145.258.11" project-jdk-type="IDEA JDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="PublishConfigData">
@@ -301,6 +302,152 @@
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+  </component>
+  <component name="issues">
+    <option name="index">
+      <map>
+        <entry key="/Dummy.txt">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/a.dummy">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$APPLICATION_HOME_DIR$/lib/idea.jar!/com/intellij/extapi/psi/PsiElementBase.class">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$APPLICATION_HOME_DIR$/lib/idea.jar!/com/intellij/openapi/editor/impl/EditorImpl.class">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$APPLICATION_HOME_DIR$/lib/idea.jar!/com/intellij/openapi/editor/impl/SelectionModelImpl.class">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$APPLICATION_HOME_DIR$/lib/idea.jar!/com/intellij/psi/impl/source/PsiJavaFileImpl.class">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$APPLICATION_HOME_DIR$/lib/idea.jar!/com/intellij/psi/impl/source/SourceTreeToPsiMap.class">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$APPLICATION_HOME_DIR$/lib/idea.jar!/com/intellij/psi/impl/source/tree/CompositeElement.class">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$APPLICATION_HOME_DIR$/lib/idea.jar!/com/intellij/psi/impl/source/tree/LeafPsiElement.class">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$APPLICATION_HOME_DIR$/lib/idea.jar!/com/intellij/psi/impl/source/tree/SharedImplUtil.class">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$APPLICATION_HOME_DIR$/lib/openapi.jar!/com/intellij/openapi/progress/ProgressIndicatorProvider.class">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$APPLICATION_HOME_DIR$/lib/openapi.jar!/com/intellij/openapi/progress/ProgressManager.class">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$APPLICATION_HOME_DIR$/lib/openapi.jar!/com/intellij/psi/PsiAnnotationMemberValue.class">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$APPLICATION_HOME_DIR$/lib/openapi.jar!/com/intellij/psi/PsiAnnotationParameterList.class">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$APPLICATION_HOME_DIR$/lib/openapi.jar!/com/intellij/psi/PsiCallExpression.class">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$APPLICATION_HOME_DIR$/lib/openapi.jar!/com/intellij/psi/PsiElement.class">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$APPLICATION_HOME_DIR$/lib/openapi.jar!/com/intellij/psi/PsiExpression.class">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$APPLICATION_HOME_DIR$/lib/openapi.jar!/com/intellij/psi/PsiMethodCallExpression.class">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$APPLICATION_HOME_DIR$/lib/openapi.jar!/com/intellij/psi/PsiParameterList.class">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$APPLICATION_HOME_DIR$/lib/openapi.jar!/com/intellij/psi/util/PsiTreeUtil.class">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/EclipseAdapter44/src/krasa/formatter/adapter/EclipseJsFormatterAdapter44.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/EclipseAdapter45/src/krasa/formatter/adapter/EclipseJavaFormatterAdapter45.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/META-INF/plugin.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/src/java/krasa/formatter/plugin/EclipseCodeFormatter.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../reconciliation-addon/itest/testdata/src/main/java/com/trmsys/reconciliation/addon/itest/testdata/auxiliary/LocalSimDocDef.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../reconciliation-addon/itest/testdata/src/main/java/com/trmsys/reconciliation/addon/itest/testdata/spi_impl/SimulatedSourceSPIImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../reconciliation/service/impl/src/main/java/com/trmsys/fcbo/reconciliation/service/daselapi/PairingProcessor.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../reconciliation/service/impl/src/main/java/com/trmsys/fcbo/reconciliation/service/reportloader/impl/ReportLoader.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="libraryTable">
     <library name="eclipse45">
@@ -353,7 +500,7 @@
       <SOURCES>
         <root url="file://$PROJECT_DIR$/lib/test" />
         <root url="file://$PROJECT_DIR$/lib/test" />
-        <root url="jar://$PROJECT_DIR$/../../unitils-easymock-3.3-sources.jar!/" />
+        <root url="jar://C:/unitils-easymock-3.3-sources.jar!/" />
       </SOURCES>
       <jarDirectory url="file://$PROJECT_DIR$/lib/test" recursive="false" />
       <jarDirectory url="file://$PROJECT_DIR$/lib/test" recursive="false" type="SOURCES" />
